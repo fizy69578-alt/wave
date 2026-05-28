@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Wave Films | Железный человек готов к просмотру</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0c12;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            color: #eef2ff;
+            line-height: 1.4;
+        }
+
+        .site-header {
+            background: rgba(15, 17, 26, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #2d2f3e;
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffffff, #facc15);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            font-size: 0.65rem;
+            color: #94a3b8;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .search-box {
+            display: flex;
+            background: #1e1f2c;
+            border-radius: 60px;
+            border: 1px solid #2d2f3e;
+            flex: 1;
+            max-width: 280px;
+        }
+        .search-box input {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            color: white;
+            outline: none;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+        .search-box button {
+            background: #e23636;
+            border: none;
+            border-radius: 60px;
+            padding: 0 1rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 0.4rem;
+            background: #151824;
+            padding: 0.3rem;
+            border-radius: 50px;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .tab-btn.active {
+            background: #e23636;
+            color: white;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 1.2rem;
+        }
+
+        .welcome {
+            margin-bottom: 1.8rem;
+            background: linear-gradient(110deg, #11161f, #0a0e16);
+            border-radius: 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-left: 4px solid #facc15;
+        }
+        .welcome h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        .welcome p {
+            color: #9ca3cf;
+            font-size: 0.85rem;
+            margin-top: 6px;
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .movie-card {
+            background: #151824;
+            border-radius: 1rem;
+            overflow: hidden;
+            cursor: pointer;
+            transition: 0.2s ease;
+            border: 1px solid #2a2d3a;
+        }
+        .movie-card:hover {
+            transform: translateY(-4px);
+            border-color: #e23636;
+        }
+
+        .movie-poster {
+            aspect-ratio: 2/3;
+            position: relative;
+            overflow: hidden;
+            background: #0b0d14;
+        }
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.02);
+        }
+
+        .poster-badge {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(0deg, #000000f0 0%, #000000c0 50%, transparent 100%);
+            padding: 0.8rem 0.6rem 0.6rem;
+        }
+        .year-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #facc15;
+            letter-spacing: 0.5px;
+        }
+        .title-rating {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 6px;
+        }
+        .movie-title-poster {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: white;
+            text-shadow: 0 1px 2px black;
+        }
+        .rating-poster {
+            display: flex;
+            gap: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+        }
+        .rating-poster span {
+            background: #000000aa;
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+        }
+        .kp { color: #ffcc00; }
+        .imdb { color: #f5de50; }
+
+        .movie-info {
+            padding: 0.7rem 0.7rem 0.8rem;
+            border-top: 1px solid #2a2d3a;
+        }
+        .movie-title-info {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.65rem;
+            color: #94a3b8;
+            margin: 0.3rem 0 0.5rem;
+        }
+        .watch-btn {
+            width: 100%;
+            background: #e2363620;
+            border: 1px solid #e23636;
+            padding: 0.35rem;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: #facc15;
+            transition: 0.2s;
+        }
+        .watch-btn:hover {
+            background: #e23636;
+            color: white;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.2rem;
+            color: #5b6d8f;
+            font-size: 0.7rem;
+            border-top: 1px solid #1e2230;
+            margin-top: 2rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            background: #151824;
+            border-radius: 1.5rem;
+            display: none;
+        }
+
+        /* Плеер */
+        .movie-player {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000000;
+            z-index: 1000;
+            flex-direction: column;
+        }
+        .movie-player.active { display: flex; }
+        
+        .player-top-bar {
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .player-title {
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+        }
+        .close-player-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .close-player-btn:hover {
+            background: #e23636;
+            transform: scale(1.05);
+        }
+        
+        .player-main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .video-section {
+            flex: 3;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .video-container-full {
+            flex: 1;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+        }
+        
+        .video-controls-bar {
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding: 0.6rem 1.2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.8rem;
+        }
+        .ctrl-group {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .ctrl-btn {
+            background: rgba(255,255,255,0.08);
+            border: none;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            color: #e2e8f0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .ctrl-btn i { font-size: 0.8rem; }
+        .ctrl-btn:hover {
+            background: #e23636;
+            color: white;
+            transform: scale(1.02);
+        }
+        .timecode {
+            font-family: monospace;
+            background: rgba(0,0,0,0.5);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-episodes {
+            width: 300px;
+            background: rgba(12, 14, 22, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .episode-header {
+            padding: 1rem 1.2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #facc15;
+            letter-spacing: 0.5px;
+        }
+        .episodes-list {
+            flex: 1;
+            padding: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .episode-item {
+            background: rgba(21, 26, 38, 0.7);
+            border-radius: 16px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        .episode-item:hover {
+            background: rgba(226, 54, 54, 0.2);
+            border-color: rgba(226, 54, 54, 0.4);
+            transform: translateX(4px);
+        }
+        .episode-item.active-ep {
+            background: rgba(226, 54, 54, 0.25);
+            border-color: #e23636;
+            box-shadow: 0 4px 12px rgba(226, 54, 54, 0.2);
+        }
+        .episode-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .episode-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .episode-subtitle {
+            font-size: 0.65rem;
+            color: #94a3b8;
+        }
+        .episode-duration {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            font-family: monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 0.2rem 0.5rem;
+            border-radius: 20px;
+        }
+        
+        .resume-overlay {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(16px);
+            padding: 14px 22px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            z-index: 20;
+            border-left: 4px solid #facc15;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .resume-text {
+            font-size: 0.85rem;
+        }
+        .resume-text .time {
+            color: #facc15;
+            font-weight: 700;
+        }
+        .resume-btn {
+            background: #e23636;
+            border: none;
+            padding: 7px 18px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .resume-btn:hover {
+            background: #c62828;
+            transform: scale(1.02);
+        }
+        .resume-btn.secondary {
+            background: rgba(255,255,255,0.15);
+        }
+        .resume-btn.secondary:hover {
+            background: rgba(255,255,255,0.25);
+        }
+        
+        .episode-toggle {
+            display: none;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+        
+        @media (max-width: 780px) {
+            .sidebar-episodes {
+                position: absolute;
+                right: -100%;
+                width: 280px;
+                height: 100%;
+                transition: 0.3s ease;
+                z-index: 50;
+                border-radius: 16px 0 0 16px;
+            }
+            .movie-player.show-sidebar .sidebar-episodes {
+                right: 0;
+            }
+            .episode-toggle {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+            .resume-overlay {
+                bottom: 70px;
+                left: 10px;
+                right: 10px;
+                padding: 10px 15px;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .site-header {
+                padding: 0.7rem 1rem;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-box {
+                max-width: 100%;
+            }
+            .tabs-container {
+                justify-content: center;
+            }
+            .container {
+                padding: 1rem;
+            }
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 0.9rem;
+            }
+            .ctrl-btn span {
+                display: none;
+            }
+            .ctrl-btn {
+                padding: 0.4rem 0.7rem;
+            }
+            .ctrl-btn i {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<header class="site-header">
+    <div class="logo">
+        <h1>🌊 WAVE FILMS</h1>
+        <span>кино без границ</span>
+    </div>
+    <div class="search-box">
+        <input type="text" id="siteSearch" placeholder="Поиск...">
+        <button id="siteSearchBtn"><i class="fas fa-search"></i></button>
+    </div>
+    <div class="tabs-container">
+        <button class="tab-btn active" data-tab="all">Всё</button>
+        <button class="tab-btn" data-tab="movies">Фильмы</button>
+        <button class="tab-btn" data-tab="series">Сериалы</button>
+    </div>
+</header>
+
+<main class="container">
+    <div class="welcome">
+        <h2><i class="fas fa-film" style="color:#facc15;"></i> Добро пожаловать в Wave Films</h2>
+        <p>Плеер запоминает момент остановки. Фильм «Железный человек» уже готов к просмотру — видео загружается с Gofile.</p>
+    </div>
+    <div id="moviesGrid" class="movies-grid"></div>
+    <div id="noResultsMsg" class="no-results">😢 Фильмы не найдены</div>
+</main>
+
+<footer>
+    <p>Wave Films · Сохраняем прогресс · Всегда с вами</p>
+</footer>
+
+<div id="mainPlayer" class="movie-player">
+    <div class="player-top-bar">
+        <div class="player-title" id="playerMovieTitle">Загрузка...</div>
+        <button class="close-player-btn" id="closeMoviePlayer"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="player-main-layout">
+        <div class="video-section" id="videoSection">
+            <div class="video-container-full" id="videoContainerFull">
+                <video id="realVideoPlayer" controls style="width:100%; height:100%;">
+                    <source src="" id="videoSource" type="video/mp4">
+                    Ваш браузер не поддерживает видео.
+                </video>
+            </div>
+            <div class="video-controls-bar">
+                <div class="ctrl-group">
+                    <button class="ctrl-btn" id="qualityBtn"><i class="fas fa-tv"></i> <span>Full HD</span></button>
+                    <button class="ctrl-btn" id="audioTrackBtn"><i class="fas fa-language"></i> <span>Рус. Дублир.</span></button>
+                </div>
+                <div class="ctrl-group">
+                    <div class="timecode" id="playerTimecode">00:00:00</div>
+                    <button class="episode-toggle" id="toggleSidebarBtn"><i class="fas fa-list-ul"></i> <span>Эпизоды</span></button>
+                </div>
+            </div>
+        </div>
+        <div class="sidebar-episodes" id="episodesSidebar">
+            <div class="episode-header"><i class="fas fa-play-circle"></i> Список серий</div>
+            <div class="episodes-list" id="episodesList"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================= ВСЕ ФИЛЬМЫ =======================
+    // Прямая ссылка на видео с Gofile для Железного человека
+    const GOFILE_VIDEO_URL = "https://gofile.io/d/f537f989-5b06-4c31-b7c2-113d3dcd0e7e/download";
+    
+    const moviesData = [
+        { 
+            id: 1, 
+            title: "Железный человек", 
+            year: 2008, 
+            type: "movie", 
+            genre: "Marvel", 
+            duration: "126 мин", 
+            poster: "https://i.postimg.cc/QxWzZSG8/Iron-man-filmposter.jpg", 
+            kpRating: "7.9", 
+            imdbRating: "7.9", 
+            videoFile: GOFILE_VIDEO_URL 
+        }
+        // Остальные фильмы будут добавлены позже (пока видео на Gofile не загружены)
+    ];
+
+    const allContent = [...moviesData];
+    const defaultPoster = "https://placehold.co/400x600/1E293B/e23636?text=WAVE";
+
+    let currentTab = "all";
+    let searchText = "";
+    let currentActiveItem = null;
+    let currentEpisodeIndex = 0;
+    let resumeOverlay = null;
+    let saveTimeout = null;
+
+    const getStorageKey = (itemId, episodeIndex = null) => {
+        if (episodeIndex !== null && episodeIndex >= 0) {
+            return `progress_${itemId}_ep${episodeIndex}`;
+        }
+        return `progress_${itemId}`;
+    };
+
+    const formatTime = (seconds) => {
+        if (isNaN(seconds)) seconds = 0;
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = Math.floor(seconds % 60);
+        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    };
+
+    const saveProgressImmediately = () => {
+        if (!currentActiveItem || !videoPlayer || videoPlayer.readyState < 1) return;
+        const currentTime = videoPlayer.currentTime;
+        if (currentTime > 0 && isFinite(currentTime)) {
+            if (currentActiveItem.type === "series") {
+                localStorage.setItem(getStorageKey(currentActiveItem.id, currentEpisodeIndex), currentTime.toString());
+            } else {
+                localStorage.setItem(getStorageKey(currentActiveItem.id), currentTime.toString());
+            }
+        }
+    };
+
+    const saveProgress = () => {
+        if (saveTimeout) clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            saveProgressImmediately();
+        }, 300);
+    };
+
+    const getSavedProgress = (itemId, episodeIndex = null) => {
+        const saved = localStorage.getItem(getStorageKey(itemId, episodeIndex));
+        if (saved && !isNaN(parseFloat(saved))) {
+            const time = parseFloat(saved);
+            if (time > 0) return time;
+        }
+        return null;
+    };
+
+    const showResumeOverlay = (savedTime, onResume, onRestart) => {
+        if (resumeOverlay) resumeOverlay.remove();
+        
+        resumeOverlay = document.createElement("div");
+        resumeOverlay.className = "resume-overlay";
+        resumeOverlay.innerHTML = `
+            <div class="resume-text">
+                <i class="fas fa-clock" style="color:#facc15;"></i> Вы остановились на <span class="time">${formatTime(savedTime)}</span>
+            </div>
+            <button class="resume-btn" id="resumePlayBtn">▶ Продолжить</button>
+            <button class="resume-btn secondary" id="restartPlayBtn">⏹ С начала</button>
+        `;
+        videoSection.style.position = "relative";
+        videoSection.appendChild(resumeOverlay);
+        
+        document.getElementById("resumePlayBtn")?.addEventListener("click", () => {
+            if (onResume) onResume();
+            if (resumeOverlay) resumeOverlay.remove();
+            resumeOverlay = null;
+        });
+        
+        document.getElementById("restartPlayBtn")?.addEventListener("click", () => {
+            if (onRestart) onRestart();
+            if (resumeOverlay) resumeOverlay.remove();
+            resumeOverlay = null;
+        });
+    };
+
+    const moviesGrid = document.getElementById("moviesGrid");
+    const noResultsDiv = document.getElementById("noResultsMsg");
+    const searchInput = document.getElementById("siteSearch");
+    const searchBtn = document.getElementById("siteSearchBtn");
+    const playerOverlay = document.getElementById("mainPlayer");
+    const closePlayerBtn = document.getElementById("closeMoviePlayer");
+    const playerTitleSpan = document.getElementById("playerMovieTitle");
+    const videoPlayer = document.getElementById("realVideoPlayer");
+    const videoSource = document.getElementById("videoSource");
+    const episodesListDiv = document.getElementById("episodesList");
+    const toggleSidebarBtn = document.getElementById("toggleSidebarBtn");
+    const videoSection = document.getElementById("videoSection");
+
+    function getFilteredContent() {
+        let arr = [...allContent];
+        if (currentTab === "movies") arr = arr.filter(item => item.type === "movie");
+        else if (currentTab === "series") arr = arr.filter(item => item.type === "series");
+        if (searchText.trim() !== "") {
+            const query = searchText.trim().toLowerCase();
+            arr = arr.filter(item => item.title.toLowerCase().includes(query));
+        }
+        return arr;
+    }
+
+    function renderContent() {
+        const items = getFilteredContent();
+        if (items.length === 0) {
+            moviesGrid.style.display = "none";
+            noResultsDiv.style.display = "block";
+            return;
+        }
+        moviesGrid.style.display = "grid";
+        noResultsDiv.style.display = "none";
+        
+        moviesGrid.innerHTML = items.map(item => {
+            let img = item.poster && item.poster !== "" ? item.poster : defaultPoster;
+            return `
+                <div class="movie-card" data-id="${item.id}">
+                    <div class="movie-poster">
+                        <img src="${img}" loading="lazy" onerror="this.src='${defaultPoster}'">
+                        <div class="poster-badge">
+                            <div class="year-badge">${item.year}</div>
+                            <div class="title-rating">
+                                <span class="movie-title-poster">${item.title}</span>
+                                <div class="rating-poster">
+                                    <span class="kp">КП ${item.kpRating || "—"}</span>
+                                    <span class="imdb">IMDB ${item.imdbRating || "—"}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="movie-info">
+                        <div class="movie-title-info">${item.title}</div>
+                        <div class="movie-meta">
+                            <span>${item.year}</span>
+                            <span>${item.duration}</span>
+                            <span>${item.genre}</span>
+                        </div>
+                        <button class="watch-btn" data-id="${item.id}"><i class="fas fa-play"></i> Смотреть</button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+        
+        document.querySelectorAll('.watch-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const id = parseInt(btn.dataset.id);
+                openPlayer(id);
+            });
+        });
+    }
+
+    function buildEpisodesList(item) {
+        if (item.type === "series" && item.seasons) {
+            let html = '';
+            for (const season of item.seasons) {
+                for (const ep of season.episodes) {
+                    const isActive = (currentEpisodeIndex === ep.number - 1);
+                    const activeClass = isActive ? 'active-ep' : '';
+                    const subtitleHtml = ep.subtitle ? `<div class="episode-subtitle">${ep.subtitle}</div>` : '';
+                    html += `
+                        <div class="episode-item ${activeClass}" data-ep-index="${ep.number - 1}" data-ep-file="${ep.file || ''}">
+                            <div class="episode-info">
+                                <div class="episode-name">${ep.number} серия · ${ep.title}</div>
+                                ${subtitleHtml}
+                            </div>
+                            <div class="episode-duration">${ep.duration}</div>
+                        </div>
+                    `;
+                }
+            }
+            episodesListDiv.innerHTML = html;
+            
+            document.querySelectorAll('.episode-item').forEach(el => {
+                el.addEventListener('click', () => {
+                    const idx = parseInt(el.dataset.epIndex);
+                    const file = el.dataset.epFile;
+                    if (file && file !== "") {
+                        saveProgressImmediately();
+                        currentEpisodeIndex = idx;
+                        videoSource.src = file;
+                        videoPlayer.load();
+                        document.querySelectorAll('.episode-item').forEach(e => e.classList.remove('active-ep'));
+                        el.classList.add('active-ep');
+                        playerTitleSpan.innerText = `${item.title} · ${currentEpisodeIndex + 1} серия`;
+                        
+                        videoPlayer.onloadedmetadata = () => {
+                            const savedTime = getSavedProgress(item.id, currentEpisodeIndex);
+                            if (savedTime && savedTime > 0 && savedTime < videoPlayer.duration - 5) {
+                                showResumeOverlay(savedTime,
+                                    () => { videoPlayer.currentTime = savedTime; videoPlayer.play(); },
+                                    () => { videoPlayer.currentTime = 0; videoPlayer.play(); localStorage.removeItem(getStorageKey(item.id, currentEpisodeIndex)); }
+                                );
+                            } else {
+                                videoPlayer.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+                            }
+                        };
+                    } else {
+                        alert(`Файл для этой серии пока не добавлен.`);
+                    }
+                });
+            });
+        } else {
+            episodesListDiv.innerHTML = `<div class="episode-item active-ep"><div class="episode-info"><div class="episode-name">Основная версия</div></div><div class="episode-duration">${item.duration}</div></div>`;
+        }
+    }
+
+    function openPlayer(itemId) {
+        const item = allContent.find(i => i.id === itemId);
+        if (!item) return;
+        
+        currentActiveItem = item;
+        playerTitleSpan.innerText = item.title;
+        currentEpisodeIndex = 0;
+        
+        if (resumeOverlay) resumeOverlay.remove();
+        resumeOverlay = null;
+        
+        if (item.type === "series" && item.seasons) {
+            const firstEpisode = item.seasons[0]?.episodes[0];
+            if (firstEpisode && firstEpisode.file) {
+                videoSource.src = firstEpisode.file;
+                videoPlayer.load();
+                playerTitleSpan.innerText = `${item.title} · 1 серия`;
+                
+                videoPlayer.onloadedmetadata = () => {
+                    const savedTime = getSavedProgress(item.id, currentEpisodeIndex);
+                    if (savedTime && savedTime > 0 && savedTime < videoPlayer.duration - 5) {
+                        showResumeOverlay(savedTime,
+                            () => { videoPlayer.currentTime = savedTime; videoPlayer.play(); },
+                            () => { videoPlayer.currentTime = 0; videoPlayer.play(); localStorage.removeItem(getStorageKey(item.id, currentEpisodeIndex)); }
+                        );
+                    } else {
+                        videoPlayer.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+                    }
+                };
+            } else {
+                videoSource.src = "";
+                alert(`Файлы для серий "${item.title}" пока не добавлены.`);
+            }
+            buildEpisodesList(item);
+        } else if (item.videoFile && item.videoFile !== "") {
+            videoSource.src = item.videoFile;
+            videoPlayer.load();
+            buildEpisodesList(item);
+            
+            videoPlayer.onloadedmetadata = () => {
+                const savedTime = getSavedProgress(item.id);
+                if (savedTime && savedTime > 0 && savedTime < videoPlayer.duration - 5) {
+                    showResumeOverlay(savedTime,
+                        () => { videoPlayer.currentTime = savedTime; videoPlayer.play(); },
+                        () => { videoPlayer.currentTime = 0; videoPlayer.play(); localStorage.removeItem(getStorageKey(item.id)); }
+                    );
+                } else {
+                    videoPlayer.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+                }
+            };
+        } else {
+            videoSource.src = "";
+            alert(`🎬 "${item.title}"\n\nВидеофайл пока не добавлен.`);
+            buildEpisodesList(item);
+        }
+        
+        playerOverlay.classList.add("active");
+        document.body.style.overflow = "hidden";
+        
+        videoPlayer.onerror = () => {
+            if (item.type !== "series") {
+                alert(`Ошибка: не удалось загрузить видео. Проверьте ссылку на Gofile.`);
+            }
+        };
+        
+        if (window.innerWidth <= 780) playerOverlay.classList.remove("show-sidebar");
+    }
+
+    function closePlayer() {
+        saveProgressImmediately();
+        playerOverlay.classList.remove("active");
+        document.body.style.overflow = "";
+        videoPlayer.pause();
+        videoSource.src = "";
+        videoPlayer.load();
+        if (resumeOverlay) {
+            resumeOverlay.remove();
+            resumeOverlay = null;
+        }
+        currentActiveItem = null;
+    }
+
+    function initControls() {
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                currentTab = btn.dataset.tab;
+                renderContent();
+            });
+        });
+        
+        searchBtn.addEventListener("click", () => { searchText = searchInput.value; renderContent(); });
+        searchInput.addEventListener("keypress", (e) => { if (e.key === "Enter") { searchText = searchInput.value; renderContent(); } });
+        closePlayerBtn.addEventListener("click", closePlayer);
+        playerOverlay.addEventListener("click", (e) => { if (e.target === playerOverlay) closePlayer(); });
+        toggleSidebarBtn?.addEventListener("click", () => playerOverlay.classList.toggle("show-sidebar"));
+        
+        document.getElementById("qualityBtn")?.addEventListener("click", () => alert("Качество: Full HD"));
+        
+        let audioIndex = 0;
+        const audioTracks = ["Рус. Дублированный", "Укр. Проф.", "Англ. Orig"];
+        const audioBtn = document.getElementById("audioTrackBtn");
+        if (audioBtn) {
+            audioBtn.addEventListener("click", () => {
+                audioIndex = (audioIndex + 1) % audioTracks.length;
+                audioBtn.innerHTML = `<i class="fas fa-language"></i> <span>${audioTracks[audioIndex]}</span>`;
+            });
+        }
+        
+        videoPlayer.addEventListener('timeupdate', () => {
+            const currentTime = videoPlayer.currentTime;
+            document.getElementById("playerTimecode").innerText = formatTime(currentTime);
+            if (currentActiveItem && currentTime > 0) {
+                saveProgress();
+            }
+        });
+        
+        videoPlayer.addEventListener('ended', () => {
+            if (currentActiveItem) {
+                if (currentActiveItem.type === "series") {
+                    localStorage.removeItem(getStorageKey(currentActiveItem.id, currentEpisodeIndex));
+                } else {
+                    localStorage.removeItem(getStorageKey(currentActiveItem.id));
+                }
+            }
+        });
+    }
+
+    renderContent();
+    initControls();
+</script>
+</body>
+</html>
