@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Wave Films | Железный человек готов к просмотру</title>
+    <title>Wave Films | Железный человек</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -572,7 +572,7 @@
 <main class="container">
     <div class="welcome">
         <h2><i class="fas fa-film" style="color:#facc15;"></i> Добро пожаловать в Wave Films</h2>
-        <p>Плеер запоминает момент остановки. Фильм «Железный человек» уже готов к просмотру — видео загружается с Gofile.</p>
+        <p>Плеер запоминает момент остановки. Фильм «Железный человек» готов к просмотру.</p>
     </div>
     <div id="moviesGrid" class="movies-grid"></div>
     <div id="noResultsMsg" class="no-results">😢 Фильмы не найдены</div>
@@ -614,9 +614,27 @@
 </div>
 
 <script>
-    // ======================= ВСЕ ФИЛЬМЫ =======================
-    // Прямая ссылка на видео с Gofile для Железного человека
+    // ======================= НАСТРОЙКИ =======================
+    // Ваша ссылка на Gofile (можно менять, если ссылка изменится)
     const GOFILE_VIDEO_URL = "https://gofile.io/d/f537f989-5b06-4c31-b7c2-113d3dcd0e7e/download";
+    
+    // Прокси-сервер для обхода CORS и Referrer Policy
+    // Используем бесплатный публичный прокси (работает без регистрации)
+    const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+    
+    // Функция для получения прямой ссылки на видео через прокси
+    function getProxiedVideoUrl(originalUrl) {
+        // Для Gofile нужно добавить /download в конец, если его нет
+        let downloadUrl = originalUrl;
+        if (!downloadUrl.includes('/download')) {
+            downloadUrl = downloadUrl.replace(/\/d\//, '/d/') + '/download';
+        }
+        // Проксируем через allorigins
+        return CORS_PROXY + encodeURIComponent(downloadUrl);
+    }
+    
+    // Ссылка для плеера
+    const VIDEO_URL = getProxiedVideoUrl(GOFILE_VIDEO_URL);
     
     const moviesData = [
         { 
@@ -629,9 +647,8 @@
             poster: "https://i.postimg.cc/QxWzZSG8/Iron-man-filmposter.jpg", 
             kpRating: "7.9", 
             imdbRating: "7.9", 
-            videoFile: GOFILE_VIDEO_URL 
+            videoFile: VIDEO_URL 
         }
-        // Остальные фильмы будут добавлены позже (пока видео на Gofile не загружены)
     ];
 
     const allContent = [...moviesData];
@@ -904,7 +921,7 @@
         
         videoPlayer.onerror = () => {
             if (item.type !== "series") {
-                alert(`Ошибка: не удалось загрузить видео. Проверьте ссылку на Gofile.`);
+                alert(`Ошибка: не удалось загрузить видео. Проверьте соединение или ссылку на Gofile.`);
             }
         };
         
